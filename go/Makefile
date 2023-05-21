@@ -1,5 +1,5 @@
 SHELL := /bin/bash
 
 test:
-	go test -v
+    go test -v
 .PHONY: cc

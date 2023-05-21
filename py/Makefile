@@ -1,5 +1,5 @@
 SHELL := /bin/bash
 
 test:
-	python3 test_money.py -v
+    python3 test_money.py -v
 .PHONY: cc
