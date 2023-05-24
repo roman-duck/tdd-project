@@ -103,8 +103,6 @@ func TestAdditionWithMultipleMissingExcahngeRates(t *testing.T) {
 }
 
 func TestConversion(t *testing.T) {
-    bank := s.NewBank()
-    bank.AddExchangeRate("EUR", "USD", 1.2)
     tenEuros := s.NewMoney(10, "EUR")
     actualConvertedMoney, err := bank.Convert(tenEuros, "USD")
     assertNil(t, err)
@@ -112,7 +110,6 @@ func TestConversion(t *testing.T) {
 }
 
 func TestConversionWithMissingExchangeRate(t *testing.T) {
-    bank := s.NewBank()
     tenEuros := s.NewMoney(10, "EUR")
     actualConvertedMoney, err := bank.Convert(tenEuros, "Kalganid")
     if actualConvertedMoney != nil {
