@@ -24,5 +24,6 @@ jobs:
       run: |
         export GO111MODULE="on"
         export GOPATH=""
-        cd go-versiongo test -v ./...
+        cd go
+        go test -v ./...
       shell: bash  
