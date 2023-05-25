@@ -5,7 +5,7 @@ const Portfolio = require('./portfolio');
 const Bank = require('./bank');
 
 class MoneyTest {
-  constructor() {
+  setUp() {
     this.bank = new Bank();
     this.bank.addExchangeRate("EUR", "USD", 1.2);
     this.bank.addExchangeRate("USD", "KRW", 1100);
@@ -51,15 +51,6 @@ class MoneyTest {
     assert.deepStrictEqual(portfolio.evaluate(this.bank, "KRW"), expectedValue)
   }
 
-  getAllTestMethods() {
-    let moneyPrototype = MoneyTest.prototype;
-    let allProps = Object.getOwnPropertyNames(moneyPrototype);
-    let testMethods = allProps.filter(p => {
-      return typeof moneyPrototype[p] === 'function' && p.startsWith("test");
-    });
-    return testMethods;
-  }
-
   testAdditionWithMultipleMissingExchangeRates() {
     let oneDollar = new Money(1, "USD");
     let oneEuro = new Money(1, "EUR");
@@ -72,10 +63,16 @@ class MoneyTest {
   }
 
   testConversion() {
-    let bank = new Bank();
-    bank.addExchangeRate("EUR", "USD", 1.2);
     let tenEuros = new Money(10, "EUR");
-    assert.deepStrictEqual(bank.convert(tenEuros, "USD"), new Money(12, "USD"));
+    assert.deepStrictEqual(this.bank.convert(tenEuros, "USD"), new Money(12, "USD"));
+
+    this.bank.addExchangeRate("EUR", "USD", 1.3);
+    assert.deepStrictEqual(this.bank.convert(tenEuros, "USD"), new Money(13, "USD"))
+  }
+
+  testWhatIsTheConversionRateFromEURTOUSD() {
+    let tenEuros = new Money(10, "EUR")
+    assert.deepStrictEqual(this.bank.convert(tenEuros, "USD"), new Money(12, "USD"))
   }
 
   testConversionWithMissingExchangeRate() {
@@ -94,12 +91,30 @@ class MoneyTest {
     assert.deepStrictEqual(portfolio.evaluate(new Bank(), "USD"), fifteenDollars);
   }
 
+  getAllTestMethods() {
+    let moneyPrototype = MoneyTest.prototype;
+    let allProps = Object.getOwnPropertyNames(moneyPrototype);
+    let testMethods = allProps.filter(p => {
+      return typeof moneyPrototype[p] === 'function' && p.startsWith("test");
+    });
+    return testMethods;
+  }
+
+  randomizeTestOrder(testMethods) {
+    for (let i = testMethods.length - 1; i < 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [testMethods[i], testMethods[j]] = [testMethods[j], testMethods[i]];
+    }
+    return testMethods;
+  }
+
   runAllTests() {
-    let testMethods = this.getAllTestMethods();
+    let testMethods = this.randomizeTestOrder(this.getAllTestMethods());
     testMethods.forEach(m => {
       console.log("Running: %s()", m)
       let method = Reflect.get(this, m);
       try {
+        this.setUp();
         Reflect.apply(method, this, []);
       } catch (e) {
         if (e instanceof assert.AssertionError) {
