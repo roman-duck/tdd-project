@@ -26,4 +26,9 @@ class Money
     {
         return $this->currency;
     }
+
+    public function divide(int $divisor): Money
+    {
+        return new Money($this->amount / $divisor, $this->currency);
+    }
 }

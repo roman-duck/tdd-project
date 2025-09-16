@@ -22,4 +22,13 @@ class MoneyTest extends TestCase
         $this->assertEquals('EUR', $twentyEuros->getCurrency());
         $this->assertEquals(20, $twentyEuros->getAmount());
     }
+
+    public function testDivision(): void
+    {
+        $originalMoney = new Money(4002, "KRW");
+        $actualMoneyAfterDivision  = $originalMoney->divide(4);
+        $expectedMoneyAfterDivision = new Money(1000.5, "KRW");
+        $this->assertEquals($expectedMoneyAfterDivision->getAmount(), $actualMoneyAfterDivision->getAmount());
+        $this->assertEquals($expectedMoneyAfterDivision->getCurrency(), $actualMoneyAfterDivision->getCurrency());
+    }
 }
