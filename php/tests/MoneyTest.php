@@ -51,4 +51,15 @@ class MoneyTest extends TestCase
         $actualValue = $portfolio->evaluate("USD");
         $this->assertTrue($expectedValue->isEqual($actualValue));
     }
+
+    public function testAdditionOfDollarsAndWons(): void
+    {
+        $oneDollar = new Money(1, "USD");
+        $elevenHundredWons = new Money(1100, "KRW");
+        $portfolio = new Portfolio();
+        $portfolio->add($oneDollar, $elevenHundredWons);
+        $expectedValue = new Money(2200, "KRW");
+        $actualValue = $portfolio->evaluate("KRW");
+        $this->assertTrue($expectedValue->isEqual($actualValue));
+    }
 }

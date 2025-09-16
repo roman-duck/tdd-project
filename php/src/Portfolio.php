@@ -6,14 +6,20 @@ class Portfolio
 {
     const EUR_TO_USD = 1.2;
 
+    const EXCHANGE_RATES = [
+        'EUR->USD' => 1.2, 
+        'USD->KRW' => 1100
+    ];
+
     private array $moneys = [];
 
-    private function convert(Money $money, string $currency): Money
+    private function convert(Money $money, string $currency): int
     {
         if ($money->getCurrency() === $currency) {
-            return $money;
+            return $money->getAmount();
         }
-        return new Money($money->getAmount() * self::EUR_TO_USD, $currency);
+        $key = $money->getCurrency() . '->' . $currency;
+        return $money->getAmount() * self::EXCHANGE_RATES[$key];
     }
 
     public function add(Money ...$moneys): void
@@ -24,7 +30,7 @@ class Portfolio
     public function evaluate(string $currency): Money
     {
         $total = array_reduce($this->moneys, function ($sum, Money $money) use ($currency) {
-            return $sum + $this->convert($money, $currency)->getAmount();
+            return $sum + $this->convert($money, $currency);
         }, 0);
         return new Money($total, $currency);
     }
