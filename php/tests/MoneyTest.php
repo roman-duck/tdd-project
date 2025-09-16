@@ -40,4 +40,15 @@ class MoneyTest extends TestCase
         $portfolio->add($fiveDollars, $tenDollars);
         $this->assertTrue($fifteenDollars->isEqual($portfolio->evaluate("USD")));
     }
+
+    public function testAdditionOfDollarsAndEuros(): void
+    {
+        $fiveDollars = new Money(5, "USD");
+        $tenEuros = new Money(10, "EUR");
+        $portfolio = new Portfolio();
+        $portfolio->add($fiveDollars, $tenEuros);
+        $expectedValue = new Money(17, "USD");
+        $actualValue = $portfolio->evaluate("USD");
+        $this->assertTrue($expectedValue->isEqual($actualValue));
+    }
 }
