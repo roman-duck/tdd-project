@@ -4,6 +4,7 @@ namespace App\Tests;
 
 use PHPUnit\Framework\TestCase;
 use App\Money;
+use App\Portfolio;
 
 class MoneyTest extends TestCase
 {
@@ -28,5 +29,15 @@ class MoneyTest extends TestCase
         $expectedMoneyAfterDivision = new Money(1000.5, "KRW");
         $this->assertEquals($expectedMoneyAfterDivision->getAmount(), $actualMoneyAfterDivision->getAmount());
         $this->assertEquals($expectedMoneyAfterDivision->getCurrency(), $actualMoneyAfterDivision->getCurrency());
+    }
+
+    public function testAddition(): void
+    {
+        $fiveDollars = new Money(5, "USD");
+        $tenDollars = new Money(10, "USD");
+        $fifteenDollars = new Money(15, "USD");
+        $portfolio = new Portfolio();
+        $portfolio->add($fiveDollars, $tenDollars);
+        $this->assertTrue($fifteenDollars->isEqual($portfolio->evaluate("USD")));
     }
 }
