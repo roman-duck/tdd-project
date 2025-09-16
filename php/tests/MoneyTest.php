@@ -11,14 +11,14 @@ class MoneyTest extends TestCase
     {
         $fiveDollars = new Money(5, "USD");
         $tenDollars = $fiveDollars->times(2);
-        $this->assertEquals($tenDollars, $fiveDollars->times(2));
+        $this->assertTrue($tenDollars->isEqual($fiveDollars->times(2)));
     }
 
     public function testMultiplicationInEuros(): void
     {
         $tenEuros = new Money(10, "EUR");
         $twentyEuros = $tenEuros->times(2);
-        $this->assertEquals($twentyEuros, $tenEuros->times(2));
+        $this->assertTrue($twentyEuros->isEqual($tenEuros->times(2)));
     }
 
     public function testDivision(): void

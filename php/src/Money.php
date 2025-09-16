@@ -14,9 +14,19 @@ class Money
         $this->currency = $currency;
     }
 
+    public function isEqual(Money $other): bool
+    {
+        return $this->amount === $other->amount && $this->currency === $other->currency;
+    }
+
     public function times(int $multiplier): Money
     {
         return new Money($this->amount * $multiplier, $this->currency);
+    }
+
+    public function divide(int $divisor): Money
+    {
+        return new Money($this->amount / $divisor, $this->currency);
     }
 
     public function getAmount(): int
@@ -29,8 +39,5 @@ class Money
         return $this->currency;
     }
 
-    public function divide(int $divisor): Money
-    {
-        return new Money($this->amount / $divisor, $this->currency);
-    }
+
 }
