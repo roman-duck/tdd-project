@@ -6,6 +6,8 @@ class Money
 {
     private int $amount;
 
+    private string $currency;
+
     public function __construct(int $amount, string $currency)
     {
         $this->amount = $amount;
