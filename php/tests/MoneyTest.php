@@ -5,9 +5,20 @@ namespace App\Tests;
 use PHPUnit\Framework\TestCase;
 use App\Money;
 use App\Portfolio;
+use App\Bank;
 
 class MoneyTest extends TestCase
 {
+    private Bank $bank;
+     
+    public function setUp(): void 
+    {
+        parent::setUp();
+        $this->bank = new Bank();
+        $this->bank->addExchangeRate("EUR", "USD", 1.2);
+        $this->bank->addExchangeRate("USD", "KRW", 1100);
+    }
+
     public function testMultiplicationInDollars(): void
     {
         $fiveDollars = new Money(5, "USD");
@@ -48,7 +59,7 @@ class MoneyTest extends TestCase
         $portfolio = new Portfolio();
         $portfolio->add($fiveDollars, $tenEuros);
         $expectedValue = new Money(17, "USD");
-        $actualValue = $portfolio->evaluate("USD");
+        $actualValue = $portfolio->evaluate($this->bank, "USD");
         $this->assertTrue($expectedValue->isEqual($actualValue));
     }
 
@@ -59,7 +70,7 @@ class MoneyTest extends TestCase
         $portfolio = new Portfolio();
         $portfolio->add($oneDollar, $elevenHundredWons);
         $expectedValue = new Money(2200, "KRW");
-        $actualValue = $portfolio->evaluate("KRW");
+        $actualValue = $portfolio->evaluate($this->bank, "KRW");
         $this->assertTrue($expectedValue->isEqual($actualValue));
     }
 
