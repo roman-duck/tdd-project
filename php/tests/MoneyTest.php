@@ -49,7 +49,7 @@ class MoneyTest extends TestCase
         $fifteenDollars = new Money(15, "USD");
         $portfolio = new Portfolio();
         $portfolio->add($fiveDollars, $tenDollars);
-        $this->assertTrue($fifteenDollars->isEqual($portfolio->evaluate("USD")));
+        $this->assertTrue($fifteenDollars->isEqual($portfolio->evaluate($this->bank, "USD")));
     }
 
     public function testAdditionOfDollarsAndEuros(): void
@@ -83,6 +83,6 @@ class MoneyTest extends TestCase
         $portfolio->add($oneDollar, $oneEuro, $oneWon);
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage("Missing exchange rate(s):[Kalganid->Kalganid]");
-        $portfolio->evaluate("Kalganid");
+        $portfolio->evaluate($this->bank, "Kalganid");
     }
 }
