@@ -6,6 +6,8 @@ class Portfolio
 {
     const EUR_TO_USD = 1.2;
 
+    const CURRENCIES = ['USD', 'EUR', 'KRW'];
+
     const EXCHANGE_RATES = [
         'EUR->USD' => 1.2, 
         'USD->KRW' => 1100
@@ -29,9 +31,18 @@ class Portfolio
 
     public function evaluate(string $currency): Money
     {
-        $total = array_reduce($this->moneys, function ($sum, Money $money) use ($currency) {
-            return $sum + $this->convert($money, $currency);
-        }, 0);
+        if (!in_array($currency, self::CURRENCIES)) {
+            throw new \Exception(sprintf("Missing exchange rate(s):[%s->%s]", $currency, $currency));
+        }
+
+        $total = 0;
+        foreach ($this->moneys as $money) {
+            if (!in_array($money->getCurrency(), self::CURRENCIES)) {
+                throw new \Exception(sprintf("Missing exchange rate(s):[%s->%s]", $money->getCurrency(), $currency));
+            }
+            $total += $this->convert($money, $currency);
+        }
+
         return new Money($total, $currency);
     }
 }

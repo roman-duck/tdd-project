@@ -62,4 +62,16 @@ class MoneyTest extends TestCase
         $actualValue = $portfolio->evaluate("KRW");
         $this->assertTrue($expectedValue->isEqual($actualValue));
     }
+
+    public function testAdditionWithMultipleMissingExchangeRates(): void
+    {
+        $oneDollar = new Money(1, "USD");
+        $oneEuro = new Money(1, "EUR");
+        $oneWon = new Money(1, "KRW");
+        $portfolio = new Portfolio();
+        $portfolio->add($oneDollar, $oneEuro, $oneWon);
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage("Missing exchange rate(s):[Kalganid->Kalganid]");
+        $portfolio->evaluate("Kalganid");
+    }
 }
