@@ -52,6 +52,17 @@ class MoneyTest extends TestCase
         $this->assertTrue($fifteenDollars->isEqual($portfolio->evaluate($this->bank, "USD")));
     }
 
+    public function testConversion(): void
+    {
+        $bank = new Bank();
+        $bank->addExchangeRate("EUR", "USD", 1.2);
+        $tenEuros = new Money(10, "EUR");
+        $this->assertEquals($bank->convert($tenEuros, "USD"), new Money(12, "USD"));
+        $this->assertEquals($this->bank->convert($tenEuros, "USD"), new Money(12, "USD"));
+        $this->bank->addExchangeRate("EUR", "USD", 1.3);
+        $this->assertEquals($this->bank->convert($tenEuros, "USD"), new Money(13, "USD"));
+    }   
+
     public function testAdditionOfDollarsAndEuros(): void
     {
         $fiveDollars = new Money(5, "USD");
@@ -84,5 +95,11 @@ class MoneyTest extends TestCase
         $this->expectException(\Exception::class);
         $this->expectExceptionMessage("Missing exchange rate(s):[Kalganid->Kalganid]");
         $portfolio->evaluate($this->bank, "Kalganid");
+    }
+
+    public function testWhatIsTheConversionRateFromEURToUSD(): void
+    {
+        $tenEuros = new Money(10, "EUR");
+        $this->assertEquals($this->bank->convert($tenEuros, "USD"), new Money(12, "USD"));
     }
 }
